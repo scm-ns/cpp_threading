@@ -2,6 +2,7 @@
 #include <string>
 #include <queue>
 #include <thread> // Link the pthread libs to make it work
+#include <mutex>
 #include <vector>
 #include <functional>
 
@@ -49,6 +50,7 @@ void process(std::queue<val>&q , int num)
 void call_from_thread(int tid)
 {
 	std::cout << " Doom is taking time ; sponsored by : " << tid << std::endl;
+	
 }
 
 
@@ -81,16 +83,19 @@ int main()
 {
 	std::cout << "# Threads supported " << std::thread::hardware_concurrency() << std::endl;
 	std::queue<val> q;
-	create_threads([&q](const int& tid)
+	std::mutex mtx;
+	create_threads([&q , &mtx](const int& tid)
 	{
-		std::cout << "insert into queue from thread " << tid << std::endl;
+		std::lock_guard<std::mutex> lock(mtx);
+		//std::cout << "insert into queue from thread " << tid << std::endl;
+		//std::cout << std::this_thread::get_id() << std::endl;
 		insert(q , 10, tid * 10);	
-		std::cout << "finish inserting into queue from thread " << tid << std::endl;
+		//std::cout << "finish inserting into queue from thread " << tid << std::endl;
 	});
 
 
 	join_threads();
-	
+	std::cout << __func__ << std::endl;
 	process(q, 10);
 	
 
