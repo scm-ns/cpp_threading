@@ -59,7 +59,7 @@ void create_threads()
 {
 	for( int x_  = 0 ; x_ < num_threads ; ++x_)
 	{
-		threads[x_] = std::thread(call_from_thread , x_);
+		threads.push_back(std::thread(call_from_thread , x_));
 	}
 }
 
