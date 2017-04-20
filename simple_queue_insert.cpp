@@ -27,17 +27,17 @@ void insert(std::queue<val>& q, int num)
 	}
 }
 
-inline void _process(val v)
+inline void _process(std::queue<val>& q)
 {
-	std::cout << v << std::endl;
+	std::cout << q.front() << std::endl;
+	q.pop();
 }
 
 void process(std::queue<val>&q , int num)
 {
 	for(int x = 0 ; x < num ; ++x)
 	{
-		_process(q.front());
-		q.pop();		
+		_process(q);
 	}
 }
 
