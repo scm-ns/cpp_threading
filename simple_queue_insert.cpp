@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <thread> // Link the pthread libs to make it work
 
 // ######### HELPERS ####################
 struct val
@@ -41,12 +42,17 @@ void process(std::queue<val>&q , int num)
 	}
 }
 
+void call_from_thread()
+{
+	std::cout << " Doom is taking time " << std::endl;
+}
+
+
 // ############# DOOM AND CHAOS ##############
 
 
 int main()
 {
-	std::queue<val> q; // queue adds elements to the back and pops it from the front
-	insert(q , 100);
-	process(q , 10);
+	std::thread t(call_from_thread);
+	t.join();
 }
