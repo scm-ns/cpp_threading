@@ -21,17 +21,19 @@ std::ostream &operator<<(std::ostream& os , val const& v)
 	return os << "Val : " << v._a << " : " << v._name << std::endl;
 }
 
-void insert(std::queue<val>& q, int num)
+void insert(std::queue<val>& q, int num , int start)
 {
 	char s = '^';
 	for(int x = 0 ; x < num ; ++x)
 	{
-		q.push(val(x , std::string(x , s)));
+		q.push(val(start , std::string(start , s)));
+		++start;
 	}
 }
 
 inline void _process(std::queue<val>& q)
 {
+	if(q.empty()) return;
 	std::cout << q.front() << std::endl;
 	q.pop();
 }
@@ -50,10 +52,11 @@ void call_from_thread(int tid)
 }
 
 
+
 // ############# DOOM AND CHAOS ##############
 
 // global var but it is all going to hell so who cares!
-static const int num_threads = 20;  // too many ; degrades perf
+static const int num_threads = 8;  // too many ; degrades perf
 std::vector<std::thread> threads;
 
 void create_threads(std::function<void(int)> f)
@@ -77,8 +80,18 @@ void join_threads()
 int main()
 {
 	std::cout << "# Threads supported " << std::thread::hardware_concurrency() << std::endl;
-	//create_threads(call_from_thread);
-	create_threads([](const int& v) { std::cout << v << std::endl; });
+	std::queue<val> q;
+	create_threads([&q](const int& tid)
+	{
+		std::cout << "insert into queue from thread " << tid << std::endl;
+		insert(q , 10, tid * 10);	
+		std::cout << "finish inserting into queue from thread " << tid << std::endl;
+	});
+
 
 	join_threads();
+	
+	process(q, 10);
+	
+
 }
