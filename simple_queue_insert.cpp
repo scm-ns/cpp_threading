@@ -46,10 +46,7 @@ void process(std::queue<val>&q , int num)
 
 int main()
 {
-	std::queue<val> val_q; // queue adds elements to the back and pops it from the front
-	val_q.push(val(9,"blah"));
-	val_q.push(val());
-	val_q.push(val(10,"blah2"));
-
-	std::cout << "front " << val_q.front() << " back " << val_q.back() << std::endl;
+	std::queue<val> q; // queue adds elements to the back and pops it from the front
+	insert(q , 100);
+	process(q , 10);
 }
