@@ -2,6 +2,7 @@
 #include <string>
 #include <queue>
 
+// ######### HELPERS ####################
 struct val
 {
 	val() : _a(0) , _name("") {};
@@ -17,6 +18,31 @@ std::ostream &operator<<(std::ostream& os , val const& v)
 	return os << "Val : " << v._a << " : " << v._name << std::endl;
 }
 
+void insert(std::queue<val>& q, int num)
+{
+	char s = '^';
+	for(int x = 0 ; x < num ; ++x)
+	{
+		q.push(val(x , std::string(x , s)));
+	}
+}
+
+inline void _process(val v)
+{
+	std::cout << v << std::endl;
+}
+
+void process(std::queue<val>&q , int num)
+{
+	for(int x = 0 ; x < num ; ++x)
+	{
+		_process(q.front());
+		q.pop();		
+	}
+}
+
+// ############# DOOM AND CHAOS ##############
+
 
 int main()
 {
@@ -27,7 +53,3 @@ int main()
 
 	std::cout << "front " << val_q.front() << " back " << val_q.back() << std::endl;
 }
-
-
-
-
