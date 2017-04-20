@@ -3,6 +3,7 @@
 #include <queue>
 #include <thread> // Link the pthread libs to make it work
 #include <vector>
+#include <functional>
 
 // ######### HELPERS ####################
 struct val
@@ -55,11 +56,11 @@ void call_from_thread(int tid)
 static const int num_threads = 20;  // too many ; degrades perf
 std::vector<std::thread> threads;
 
-void create_threads()
+void create_threads(std::function<void(int)> f)
 {
 	for( int x_  = 0 ; x_ < num_threads ; ++x_)
 	{
-		threads.push_back(std::thread(call_from_thread , x_));
+		threads.push_back(std::thread(f, x_));
 	}
 }
 
@@ -76,6 +77,6 @@ void join_threads()
 int main()
 {
 	std::cout << "# Threads supported " << std::thread::hardware_concurrency() << std::endl;
-	create_threads();
+	create_threads(call_from_thread);
 	join_threads();
 }
