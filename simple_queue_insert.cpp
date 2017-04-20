@@ -77,6 +77,8 @@ void join_threads()
 int main()
 {
 	std::cout << "# Threads supported " << std::thread::hardware_concurrency() << std::endl;
-	create_threads(call_from_thread);
+	//create_threads(call_from_thread);
+	create_threads([](const int& v) { std::cout << v << std::endl; });
+
 	join_threads();
 }
