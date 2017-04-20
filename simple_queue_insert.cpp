@@ -58,12 +58,11 @@ void call_from_thread(int tid)
 // ############# DOOM AND CHAOS ##############
 
 // global var but it is all going to hell so who cares!
-static const int num_threads = 8;  // too many ; degrades perf
 std::vector<std::thread> threads;
 
-void create_threads(std::function<void(int)> f)
+void create_threads(std::function<void(int)> f , int num_thr)
 {
-	for( int x_  = 0 ; x_ < num_threads ; ++x_)
+	for( int x_  = 0 ; x_ < num_thr; ++x_)
 	{
 		threads.push_back(std::thread(f, x_));
 	}
@@ -71,7 +70,7 @@ void create_threads(std::function<void(int)> f)
 
 void join_threads()
 {
-	for( int x_  = 0 ; x_ < num_threads ; ++x_)
+	for( std::size_t x_  = 0 ; x_ < threads.size() ; ++x_)
 	{
 		if(threads[x_].joinable())
 			threads[x_].join();
@@ -87,16 +86,17 @@ int main()
 	create_threads([&q , &mtx](const int& tid)
 	{
 		std::lock_guard<std::mutex> lock(mtx);
-		//std::cout << "insert into queue from thread " << tid << std::endl;
-		//std::cout << std::this_thread::get_id() << std::endl;
 		insert(q , 10, tid * 10);	
-		//std::cout << "finish inserting into queue from thread " << tid << std::endl;
-	});
+	} , 3 );
 
+	create_threads([&q](const int& tid)
+	{
+		process(q, 10);
+	} , 1);
+	
 
 	join_threads();
 	std::cout << __func__ << std::endl;
-	process(q, 10);
 	
 
 }
