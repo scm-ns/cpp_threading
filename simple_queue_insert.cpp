@@ -2,6 +2,7 @@
 #include <string>
 #include <queue>
 #include <thread> // Link the pthread libs to make it work
+#include <vector>
 
 // ######### HELPERS ####################
 struct val
@@ -42,17 +43,39 @@ void process(std::queue<val>&q , int num)
 	}
 }
 
-void call_from_thread()
+void call_from_thread(int tid)
 {
-	std::cout << " Doom is taking time " << std::endl;
+	std::cout << " Doom is taking time ; sponsored by : " << tid << std::endl;
 }
 
 
 // ############# DOOM AND CHAOS ##############
 
+// global var but it is all going to hell so who cares!
+static const int num_threads = 20;  // too many ; degrades perf
+std::vector<std::thread> threads;
+
+void create_threads()
+{
+	for( int x_  = 0 ; x_ < num_threads ; ++x_)
+	{
+		threads[x_] = std::thread(call_from_thread , x_);
+	}
+}
+
+void join_threads()
+{
+	for( int x_  = 0 ; x_ < num_threads ; ++x_)
+	{
+		if(threads[x_].joinable())
+			threads[x_].join();
+	}
+}
+
 
 int main()
 {
-	std::thread t(call_from_thread);
-	t.join();
+	std::cout << "# Threads supported " << std::thread::hardware_concurrency() << std::endl;
+	create_threads();
+	join_threads();
 }
